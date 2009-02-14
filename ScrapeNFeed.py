@@ -43,12 +43,17 @@ class WebPageMetadata:
         f.write(s.getvalue())
         f.close()
 
-    def fetch(self):
+    def fetch(self, headers=None):
         request = urllib2.Request(self.url)
         if self.etag:
             request.add_header('If-None-Match', self.etag)
         if self.lastModified:
             request.add_header('If-Modified-Since', self.lastModified)
+
+        if headers:
+            for h in headers:
+                request.add_header(h[0], h[1])
+
         response = urllib2.urlopen(request)
 
         headers = response.info()
@@ -61,7 +66,7 @@ class ScrapedFeed(RSS2, WebPageMetadata):
     from a web page."""
 
     def __init__(self, title, url, description, rssFile=None, pickleFile=None,
-                 maxItems=20, **kwargs):
+                 maxItems=20, headers=None, **kwargs):
         RSS2.__init__(self, title, url, description, **kwargs)
         WebPageMetadata.__init__(self, url, pickleFile)
         self.maxItems = maxItems
@@ -69,6 +74,7 @@ class ScrapedFeed(RSS2, WebPageMetadata):
             rssFile = self.digest() + '.xml'
         self.rssFile = rssFile
         self.currentGuids = {}
+        self.headers = headers
 
     def refresh(self):
         """Re-fetches the source of this feed, updates the RSS feed
@@ -76,7 +82,7 @@ class ScrapedFeed(RSS2, WebPageMetadata):
         and pickles the new state of the feed."""
 
         try:
-            response = self.fetch()
+            response = self.fetch(self.headers)
             headers = response.info()
             body = response.read()
             self.lastBuildDate = datetime.datetime.now()
@@ -173,16 +179,17 @@ class ScrapedFeed(RSS2, WebPageMetadata):
         which actually creates the RSS feed out of a web page!"""
 
     def load(subclass, title, url, description, rssFile=None,
-             pickleFile=None, maxItems=20, refresh=True, **kwargs):    
+             pickleFile=None, maxItems=20, refresh=True, headers=None, **kwargs):
         if pickleFile and os.path.exists(pickleFile):
             f = open(pickleFile, 'r')
             feed = pickle.load(f)
             feed.title = title
             feed.description = description
-            feed.rssFile=rssFile
+            feed.rssFile = rssFile
             feed.maxItems = maxItems
+            feed.headers = headers
         else:
-            feed = subclass(title, url, description, rssFile, pickleFile, maxItems, **kwargs)
+            feed = subclass(title, url, description, rssFile, pickleFile, maxItems, headers, **kwargs)
         if refresh:
             feed.refresh()
         return feed
