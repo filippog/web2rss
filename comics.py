@@ -18,7 +18,7 @@ class Monty(ScrapeNFeed.ScrapedFeed):
 
         if not self.hasSeen(link):
             i = RSSItem(title=title,
-                        description = "&lt;img src=&quot;%s&quot;/&gt;" % link,
+                        description = '<img src="%s"/>' % link,
                         link=link)
             self.pushRSSItem(i)
 
@@ -37,7 +37,7 @@ class Culdesac(ScrapeNFeed.ScrapedFeed):
 
         if not self.hasSeen(link):
             i = RSSItem(title=title,
-                        description = "&lt;img src=&quot;%s&quot;/&gt;" % link,
+                        description = '<img src="%s"/>' % link,
                         link=link)
             self.pushRSSItem(i)
 
@@ -64,7 +64,8 @@ class ManifestoPrima(ScrapeNFeed.ScrapedFeed):
 
         if not self.hasSeen(link):
             i = RSSItem(title=date.today().strftime("il Manifesto prima pagina - %d/%m/%Y"),
-                        description = "&lt;img src=&quot;%s&quot;/&gt;" % link,
+                        description = '<img src="%s"/>' % link,
+                        #description = "&lt;img src=&quot;%s&quot;/&gt;" % link,
                         link=link)
             self.pushRSSItem(i)
 
