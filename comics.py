@@ -33,11 +33,17 @@ class Culdesac(ScrapeNFeed.ScrapedFeed):
         soup = BeautifulSoup.BeautifulSoup(body)
 
         title = [ x.string[8:] for x in soup.findAll('dd') if x.string and x.string.startswith("Posted:") ][0]
-        link = soup('img', alt=re.compile("^Cds\d+"), id=re.compile("^comic_\d+"))[0]['src']
+        l = soup('img', id=re.compile("^comic_\d+"))
+        try:
+            link = l[0]['src']
+            description = '<img src="%s"/>' % link
+        except IndexError:
+            link = title
+            description = 'unable to find link: <pre>%s</pre>' % repr(l)
 
         if not self.hasSeen(link):
             i = RSSItem(title=title,
-                        description = '<img src="%s"/>' % link,
+                        description = description,
                         link=link)
             self.pushRSSItem(i)
 
