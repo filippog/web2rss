@@ -180,6 +180,7 @@ class ScrapedFeed(RSS2, WebPageMetadata):
 
     def load(subclass, title, url, description, rssFile=None,
              pickleFile=None, maxItems=20, refresh=True, headers=None, **kwargs):
+# XXX add check for current file mtime > picklefile to avoid loading old webpagemetadata code
         if pickleFile and os.path.exists(pickleFile):
             f = open(pickleFile, 'r')
             feed = pickle.load(f)

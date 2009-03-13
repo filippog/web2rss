@@ -105,3 +105,4 @@ ManifestoPrima.load("il Manifesto",
 #                    "il Manifesto - vignetta",
 #                    "manifesto_vignetta.xml",
 #                    "manifesto_vignetta.pickle")
+# vim:et
