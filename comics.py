@@ -32,10 +32,8 @@ class Culdesac(ScrapeNFeed.ScrapedFeed):
     def HTML2RSS(self, headers, body):
         soup = BeautifulSoup.BeautifulSoup(body)
 
-        #title = [ x.string[8:] for x in soup.findAll('dd') if x.string and x.string.startswith("Posted:") ][0]
-        #l = soup('img', id=re.compile("^comic_\d+"))
-        title = soup('meta', name="date-creation-yyyymmdd")['content']
-        link = soup('link', rel="image_src")['href']
+        title = soup.find('ul', attrs = {'class': 'feature-nav'}).li.string
+        link = soup.find('link', attrs={'rel': 'image_src'})['href']
         description = '<img src="%s"/>' % link
 
         if not self.hasSeen(link):
