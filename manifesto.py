@@ -14,9 +14,10 @@ class ManifestoPrima(ScrapeNFeed.ScrapedFeed):
 
         soup = BeautifulSoup.BeautifulSoup(body)
 
-        rellink = soup.find('a', attrs = {'href': re.compile('pagina/IMMAGINE/$')})['href']
+        rellink = soup.find('a', attrs = {'href': re.compile('pagina/IMMAGINE/$')})
         if not rellink:
             return
+        rellink = rellink['href']
 
         today = re.search("numero/(\d+)/pagina/", rellink).group(1)
         link = "http://www.ilmanifesto.it/fileadmin/archivi/in_edicola/%sprimapagina.gif" % today
@@ -39,9 +40,10 @@ class ManifestoVignetta(ScrapeNFeed.ScrapedFeed):
 
         soup = BeautifulSoup.BeautifulSoup(body)
 
-        rellink = soup.find('a', attrs = {'href': re.compile('pagina/VIGNETTA/$')})['href']
+        rellink = soup.find('a', attrs = {'href': re.compile('pagina/VIGNETTA/$')})
         if not rellink:
             return
+        rellink = rellink['href']
 
         today = re.search("numero/(\d+)/pagina/", rellink).group(1)
         link = "http://www.ilmanifesto.it/fileadmin/archivi/in_edicola/%svignetta.gif" % today
