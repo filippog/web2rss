@@ -11,7 +11,8 @@ from datetime import date
 class Monty(ScrapeNFeed.ScrapedFeed):
     def HTML2RSS(self, headers, body):
         soup = BeautifulSoup.BeautifulSoup(body)
-        today = soup('img', onload=re.compile("^STR.AttachZoomHover"), src=re.compile("^http://assets.comics.com/dyn/"))[0]
+        today = soup('img', onload=re.compile("^STR.AttachZoomHover"),
+                src=re.compile("^http://(assets.comics.com|\S+rackspacecloud.com)/dyn/"))[0]
 
         title = today['alt']
         link = today['src']
